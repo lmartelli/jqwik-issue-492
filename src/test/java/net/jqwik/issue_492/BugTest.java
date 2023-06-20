@@ -1,5 +1,6 @@
 package net.jqwik.issue_492;
 
+import net.harawata.reflection.TypeParameterResolver;
 import net.jqwik.api.*;
 import net.jqwik.api.domains.Domain;
 import net.jqwik.api.domains.DomainContext;
@@ -7,6 +8,8 @@ import net.jqwik.api.domains.DomainContextBase;
 import net.jqwik.api.providers.ArbitraryProvider;
 import net.jqwik.api.providers.TypeUsage;
 
+import java.lang.reflect.Method;
+import java.lang.reflect.ParameterizedType;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -56,5 +59,16 @@ public class BugTest {
                         .collect(Collectors.toSet());
             }
         }
+    }
+
+    @Example
+    void typeParameterResolver() throws NoSuchMethodException {
+        Method m = Inner1.class.getDeclaredMethod("genericProperty", Object.class);
+        assertThat(m).isNotNull();
+        var type = TypeParameterResolver.resolveParamTypes(m, Inner3.class)[0];
+        assertThat(type)
+                .isInstanceOfSatisfying(ParameterizedType.class, parameterizedType -> {
+                    assertThat(parameterizedType.getActualTypeArguments()[0]).isEqualTo(String.class);
+                });
     }
 }

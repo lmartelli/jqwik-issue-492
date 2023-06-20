@@ -46,6 +46,11 @@
             <artifactId>jqwik</artifactId>
             <version>${jqwik.version}</version>
         </dependency>
+        <dependency>
+            <groupId>net.harawata.reflection</groupId>
+            <artifactId>typeparameterresolver</artifactId>
+            <version>1.0.2</version>
+        </dependency>
     </dependencies>
 
     <build>
